@@ -1,17 +1,18 @@
 import p5
 import math
 import numpy as np
+from Vector2D import Vector2D
 
 class Boid():
 
     def __init__(self, x, y, width, height):
-        self.position = p5.Vector(x,y)
+        self.position = Vector2D(x,y)
 
         vec = (np.random.rand(2) - 0.5)*10
-        self.velocity = p5.Vector(*vec)
+        self.velocity = Vector2D(*vec)
 
         vec = (np.random.rand(2) - 0.5)/2
-        self.acceleration = p5.Vector(*vec)
+        self.acceleration = Vector2D(*vec)
 
     def show(self):
         p5.stroke(255)
@@ -20,10 +21,11 @@ class Boid():
     def behavior(self, boids):
         self.cohesion(boids)
         self.seperation(boids)
+        self.alignment(boids)
 
     def cohesion(self, boids):
         neighborList = self.neighborBoids(boids, 50)
-        averageNeighborList = p5.Vector(0,0)
+        averageNeighborList = Vector2D(0,0)
         for boid in neighborList:
             averageNeighborList += boid.position
         averageNeighborList  = averageNeighborList/len(neighborList)
@@ -31,7 +33,7 @@ class Boid():
 
     def seperation(self, boids):
         neighborList = self.neighborBoids(boids, 20)
-        averageNeighborList = p5.Vector(0,0)
+        averageNeighborList = Vector2D(0,0)
         for boid in neighborList:
             averageNeighborList += boid.position
         averageNeighborList  = averageNeighborList/len(neighborList)
@@ -39,7 +41,7 @@ class Boid():
 
     def alignment(self, boids):
         neighborList = self.neighborBoids(boids, 50)
-        averageNeighborList = p5.Vector(0,0)
+        averageNeighborList = Vector2D(0,0)
         for boid in neighborList:
             averageNeighborList += boid.velocity
         averageNeighborList  = averageNeighborList/len(neighborList)
@@ -60,19 +62,20 @@ class Boid():
         self.applySpeedLimit()
         self.position += self.velocity
         self.velocity += self.acceleration
-        self.acceleration = p5.Vector(0,0)
+        self.acceleration = Vector2D(0,0)
 
     def applySpeedLimit(self):
-        if (self.mag(self.velocity) > 10):
-            self.velocity.normalize()
+        if (self.velocity.mag() > 10):
+            self.velocity = self.velocity.normalize()
             self.velocity = self.velocity*10
+        pass
 
     def mag(self, vector):
         return math.sqrt(vector.x**2+vector.y**2)
 
     def distance(self, vector1, vector2):
-        differenceVector = p5.Vector(vector1.x-vector2.x, vector1.y-vector2.y)
-        return self.mag(differenceVector)
+        differenceVector = vector1 - vector2
+        return differenceVector.mag()
 
     def neighborBoids(self, boids, radius):
         neighborList = []
