@@ -3,14 +3,13 @@ import math
 import numpy as np
 from vector2D import Vector2D
 
+
 class Boid():
 
     def __init__(self, x, y, width, height):
-        self.position = Vector2D(x,y)
-
+        self.position = Vector2D(x, y)
         vec = (np.random.rand(2) - 0.5)*10
         self.velocity = Vector2D(*vec)
-
         vec = (np.random.rand(2) - 0.5)/2
         self.acceleration = Vector2D(*vec)
 
@@ -25,44 +24,43 @@ class Boid():
 
     def cohesion(self, boids):
         neighborList = self.neighborBoids(boids, 50)
-        averageNeighborList = Vector2D(0,0)
+        averageNeighborList = Vector2D(0, 0)
         for boid in neighborList:
             averageNeighborList += boid.position
-        averageNeighborList  = averageNeighborList/len(neighborList)
+        averageNeighborList = averageNeighborList/len(neighborList)
         self.velocity += 0.05*(averageNeighborList-self.position)
 
     def seperation(self, boids):
         neighborList = self.neighborBoids(boids, 20)
-        averageNeighborList = Vector2D(0,0)
+        averageNeighborList = Vector2D(0, 0)
         for boid in neighborList:
             averageNeighborList += boid.position
-        averageNeighborList  = averageNeighborList/len(neighborList)
+        averageNeighborList = averageNeighborList/len(neighborList)
         self.velocity += 0.20*(self.position - averageNeighborList)
 
     def alignment(self, boids):
         neighborList = self.neighborBoids(boids, 50)
-        averageNeighborList = Vector2D(0,0)
+        averageNeighborList = Vector2D(0, 0)
         for boid in neighborList:
             averageNeighborList += boid.velocity
-        averageNeighborList  = averageNeighborList/len(neighborList)
+        averageNeighborList = averageNeighborList/len(neighborList)
         self.acceleration += 0.05*(averageNeighborList-self.velocity)
 
-
     def edges(self):
-        if (self.position.x>=900):
+        if (self.position.x >= 900):
             self.acceleration.x -= 1
-        if (self.position.x<=100):
+        if (self.position.x <= 100):
             self.acceleration.x += 1
-        if (self.position.y>=900):
+        if (self.position.y >= 900):
             self.acceleration.y -= 1
-        if (self.position.y<=100):
+        if (self.position.y <= 100):
             self.acceleration.y += 1
 
     def update(self):
         self.applySpeedLimit()
         self.position += self.velocity
         self.velocity += self.acceleration
-        self.acceleration = Vector2D(0,0)
+        self.acceleration = Vector2D(0, 0)
 
     def applySpeedLimit(self):
         if (self.velocity.mag() > 10):
