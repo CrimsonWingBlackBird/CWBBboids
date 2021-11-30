@@ -1,7 +1,7 @@
 import p5
 import math
 import numpy as np
-from Vector2D import Vector2D
+from vector2D import Vector2D
 
 class Boid():
 
@@ -15,7 +15,7 @@ class Boid():
         self.acceleration = Vector2D(*vec)
 
     def show(self):
-        p5.stroke(255)
+        p5.stroke(255, 204, 0)
         p5.circle((self.position.x, self.position.y), 3)
 
     def behavior(self, boids):
@@ -29,7 +29,7 @@ class Boid():
         for boid in neighborList:
             averageNeighborList += boid.position
         averageNeighborList  = averageNeighborList/len(neighborList)
-        self.velocity += averageNeighborList-self.position
+        self.velocity += 0.05*(averageNeighborList-self.position)
 
     def seperation(self, boids):
         neighborList = self.neighborBoids(boids, 20)
@@ -37,7 +37,7 @@ class Boid():
         for boid in neighborList:
             averageNeighborList += boid.position
         averageNeighborList  = averageNeighborList/len(neighborList)
-        self.velocity += self.position - averageNeighborList
+        self.velocity += 0.20*(self.position - averageNeighborList)
 
     def alignment(self, boids):
         neighborList = self.neighborBoids(boids, 50)
@@ -45,17 +45,17 @@ class Boid():
         for boid in neighborList:
             averageNeighborList += boid.velocity
         averageNeighborList  = averageNeighborList/len(neighborList)
-        self.acceleration += averageNeighborList-self.velocity
+        self.acceleration += 0.05*(averageNeighborList-self.velocity)
 
 
     def edges(self):
-        if (self.position.x>=950):
+        if (self.position.x>=900):
             self.acceleration.x -= 1
-        if (self.position.x<=50):
+        if (self.position.x<=100):
             self.acceleration.x += 1
-        if (self.position.y>=950):
+        if (self.position.y>=900):
             self.acceleration.y -= 1
-        if (self.position.y<=50):
+        if (self.position.y<=100):
             self.acceleration.y += 1
 
     def update(self):
