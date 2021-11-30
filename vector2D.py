@@ -8,11 +8,11 @@ class Vector2D():
 
     #Returns magnitude of the vector
     def mag(self):
-        return math.sqrt(self.x**2+self.y**2)
+        return math.sqrt(self.x**2 + self.y**2)
 
     #Normalizes the vector
     def normalize(self):
-        return self / self.mag()
+        return Vector2D(self.x / self.mag(), self.y / self.mag())
 
     #Takes the dot product of two vectors
     def dot(self, other):
@@ -96,7 +96,7 @@ class Vector2D():
 
     def __eq__(self, other):
         if type(other) is Vector2D:
-            if (self.x == other.x && self.y == other.y):
+            if (self.x == other.x & self.y == other.y):
                 return True
             else:
                 return False
@@ -105,7 +105,7 @@ class Vector2D():
 
     def __ne__(self, other):
         if type(other) is Vector2D:
-            if (self.x == other.x && self.y == other.y):
+            if (self.x == other.x & self.y == other.y):
                 return False
             else:
                 return True
