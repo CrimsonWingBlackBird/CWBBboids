@@ -1,25 +1,27 @@
-from p5 import setup, draw, size, background, run
+from tkinter import *
 import numpy as np
 from boid import Boid
 
-width = 1000
-height = 1000
+sizeX = 1000
+sizeY = 1000
+flock = [Boid(*np.random.rand(2)*1000, sizeX, sizeY) for _ in range(30)]
 
-flock = [Boid(*np.random.rand(2)*1000, width, height) for _ in range(30)]
+root = Tk()
+root.title('Boids')
+
+c = Canvas(root, width=sizeX, height=sizeY)
+c.pack()
 
 
-def setup():
-    size(width, height)
-
-
-def draw():
-    background(0, 0, 0)
-
+def App(canvas):
+    canvas.delete("all")
     for boid in flock:
-        boid.show()
+        boid.show(canvas)
         boid.behavior(flock)
         boid.edges()
         boid.update()
+    root.after(25, lambda: App(canvas))
 
 
-run()
+App(c)
+root.mainloop()

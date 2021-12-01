@@ -1,4 +1,4 @@
-import p5
+from tkinter import *
 import math
 import numpy as np
 from vector2D import Vector2D
@@ -13,9 +13,11 @@ class Boid():
         vec = (np.random.rand(2) - 0.5)/2
         self.acceleration = Vector2D(*vec)
 
-    def show(self):
-        p5.stroke(255, 204, 0)
-        p5.circle((self.position.x, self.position.y), 3)
+    def show(self, canvas):
+        radius = 3
+        coord = (self.position.x - radius, self.position.y - radius,
+                 self.position.x + radius, self.position.y + radius)
+        canvas.create_oval(coord, fill="red")
 
     def behavior(self, boids):
         self.cohesion(boids)
