@@ -104,6 +104,7 @@ def displayParameterInput():
     inputBox4.grid(row=3, column=1)
     inputBox5.grid(row=4, column=1)
     startButton.grid(row=5, column=0)
+    stopFlag = False
 
 
 # Definitions for input box labels
