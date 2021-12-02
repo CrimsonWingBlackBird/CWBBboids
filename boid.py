@@ -22,37 +22,40 @@ class Boid():
         canvas.create_oval(coord, fill="red")
 
     # Calls the behavior functions
-    def behavior(self, boids):
-        self.cohesion(boids)
-        self.seperation(boids)
-        self.alignment(boids)
+    def behavior(self, boids, cohesionStrength, seperationStrength,
+                 alignmentStrength):
+        self.cohesion(boids, cohesionStrength)
+        self.seperation(boids, seperationStrength)
+        self.alignment(boids, alignmentStrength)
 
     # Makes the boids stick together.
-    def cohesion(self, boids):
+    def cohesion(self, boids, cohesionStrength):
         neighborList = self.neighborBoids(boids, 50)
         averageNeighborList = Vector2D(0, 0)
         for boid in neighborList:
             averageNeighborList += boid.position
         averageNeighborList = averageNeighborList/len(neighborList)
-        self.velocity += 0.05*(averageNeighborList-self.position)
+        self.velocity += cohesionStrength*(averageNeighborList-self.position)
 
     # Makes the boids not get too close
-    def seperation(self, boids):
+    def seperation(self, boids, seperationStrength):
         neighborList = self.neighborBoids(boids, 20)
         averageNeighborList = Vector2D(0, 0)
         for boid in neighborList:
             averageNeighborList += boid.position
         averageNeighborList = averageNeighborList/len(neighborList)
-        self.velocity += 0.20*(self.position - averageNeighborList)
+        self.velocity += seperationStrength * \
+            (self.position - averageNeighborList)
 
     # Makes the boids go in the same direction as their neighbors
-    def alignment(self, boids):
+    def alignment(self, boids, alignmentStrength):
         neighborList = self.neighborBoids(boids, 50)
         averageNeighborList = Vector2D(0, 0)
         for boid in neighborList:
             averageNeighborList += boid.velocity
         averageNeighborList = averageNeighborList/len(neighborList)
-        self.acceleration += 0.05*(averageNeighborList-self.velocity)
+        self.acceleration += alignmentStrength * \
+            (averageNeighborList-self.velocity)
 
     # Steers the boids away from the edges
     # NEED TO UPDATE USING sizeX AND sizeY
@@ -67,17 +70,17 @@ class Boid():
             self.acceleration.y += 1
 
     # Pushes velocity and position changes to boids
-    def update(self):
-        self.applySpeedLimit()
+    def update(self, speedLimit):
+        self.applySpeedLimit(speedLimit)
         self.position += self.velocity
         self.velocity += self.acceleration
         self.acceleration = Vector2D(0, 0)
 
     # Stops the boids from going too fast
-    def applySpeedLimit(self):
-        if (self.velocity.mag() > 10):
+    def applySpeedLimit(self, speedLimit):
+        if (self.velocity.mag() > speedLimit):
             self.velocity = self.velocity.normalize()
-            self.velocity = self.velocity*10
+            self.velocity = self.velocity*speedLimit
         pass
 
     # Finds the distance between two vectors
