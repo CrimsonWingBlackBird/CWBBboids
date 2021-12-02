@@ -27,8 +27,10 @@ def restart():
 
 
 # Adds the restart button to the window
-restartButton = Button(root, text="Restart Simulation", command=restart)
-restartButton.pack()
+menuBar = Menu(root)
+restartMenu = Menu(menuBar, tearoff=0)
+restartMenu.add_command(label="Restart Boids", command=restart)
+menuBar.add_cascade(label="Restart", menu=restartMenu)
 
 # Adds the simulation enviroment to the window
 c = Canvas(root, width=sizeX, height=sizeY)
@@ -41,6 +43,8 @@ def App(canvas):
     canvas.delete("all")
     global flock
     global resetFlag
+    global rng
+    global numberofBoids
     for boid in flock:
         boid.show(canvas)
         boid.behavior(flock)
@@ -49,12 +53,13 @@ def App(canvas):
     if resetFlag is not True:
         root.after(25, lambda: App(canvas))
     else:
-        flock = [Boid(*np.random.rand(2)*1000, sizeX, sizeY)
-                 for _ in range(30)]
+        flock = [Boid(rng.random()*sizeX, rng.random()*sizeY, sizeX, sizeY)
+                 for _ in range(numberOfBoids)]
         resetFlag = False
         root.after(1, lambda: App(canvas))
 
 
 # Initializes the simulation
 App(c)
+root.config(menu=menuBar)
 root.mainloop()
