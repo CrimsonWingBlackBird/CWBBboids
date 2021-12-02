@@ -21,8 +21,9 @@ root = Tk()
 root.title('Boids')
 
 
-# This block controls the reset flag
+# These blocks controls the reset and stop flags
 resetFlag = False
+stopFlag = False
 
 
 def restart():
@@ -30,11 +31,17 @@ def restart():
     resetFlag = True
 
 
-# Adds the restart button to the window
+def stopSimulation():
+    global stopFlag
+    stopFlag = True
+
+
+# Defines the menu
 menuBar = Menu(root)
-restartMenu = Menu(menuBar, tearoff=0)
-restartMenu.add_command(label="Restart Boids", command=restart)
-menuBar.add_cascade(label="Restart", menu=restartMenu)
+simulationMenu = Menu(menuBar, tearoff=0)
+simulationMenu.add_command(label="Restart Boids", command=restart)
+simulationMenu.add_command(label="Settings", command=stopSimulation)
+menuBar.add_cascade(label="Simulation", menu=simulationMenu)
 
 
 # Starts the Simulation
@@ -45,6 +52,7 @@ def startSimulation():
     global alignmentStrength
     global speedLimit
     global flock
+    global c
 
     # Sets simulation parameters
     if inputBox1.get() != '':
@@ -77,6 +85,25 @@ def startSimulation():
     c = Canvas(root, width=sizeX, height=sizeY)
     c.grid(row=0, column=0)
     App(c)
+
+
+# Puts up the parameter input screen
+def displayParameterInput():
+    global flock
+    global stopFlag
+    global c
+    c.destroy()
+    inputLabel1.grid(row=0, column=0)
+    inputLabel2.grid(row=1, column=0)
+    inputLabel3.grid(row=2, column=0)
+    inputLabel4.grid(row=3, column=0)
+    inputLabel5.grid(row=4, column=0)
+    inputBox1.grid(row=0, column=1)
+    inputBox2.grid(row=1, column=1)
+    inputBox3.grid(row=2, column=1)
+    inputBox4.grid(row=3, column=1)
+    inputBox5.grid(row=4, column=1)
+    startButton.grid(row=5, column=0)
 
 
 # Definitions for input box labels
@@ -120,14 +147,17 @@ def App(canvas):
     global resetFlag
     global rng
     global numberofBoids
+    global stopFlag
     for boid in flock:
         boid.show(canvas)
         boid.behavior(flock, cohesionStrength,
                       seperationStrength, alignmentStrength)
         boid.edges()
         boid.update(speedLimit)
-    if resetFlag is not True:
+    if (resetFlag or stopFlag) is not True:
         root.after(25, lambda: App(canvas))
+    elif stopFlag is True:
+        displayParameterInput()
     else:
         flock = [Boid(rng.random()*sizeX, rng.random()*sizeY, sizeX, sizeY)
                  for _ in range(numberOfBoids)]
