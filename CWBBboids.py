@@ -82,7 +82,7 @@ def startSimulation():
     # Start simulation
     flock = [Boid(rng.random()*sizeX, rng.random()*sizeY, sizeX, sizeY)
              for _ in range(numberOfBoids)]
-    c = Canvas(root, width=sizeX, height=sizeY)
+    c = Canvas(root, width=sizeX, height=sizeY, bd=5, bg="white")
     c.grid(row=0, column=0)
     App(c)
 
@@ -149,11 +149,13 @@ def App(canvas):
     global rng
     global numberofBoids
     global stopFlag
+    global sizeX
+    global sizeY
     for boid in flock:
         boid.show(canvas)
         boid.behavior(flock, cohesionStrength,
                       seperationStrength, alignmentStrength)
-        boid.edges()
+        boid.edges(sizeX, sizeY)
         boid.update(speedLimit)
     if (resetFlag or stopFlag) is not True:
         root.after(25, lambda: App(canvas))
