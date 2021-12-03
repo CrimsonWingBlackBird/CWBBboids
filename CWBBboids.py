@@ -58,13 +58,13 @@ def startSimulation():
     if inputBox1.get() != '':
         numberOfBoids = int(inputBox1.get())
     if inputBox2.get() != '':
-        cohesionStrength = int(inputBox2.get())
+        cohesionStrength = float(inputBox2.get())
     if inputBox3.get() != '':
-        seperationStrength = int(inputBox3.get())
+        seperationStrength = float(inputBox3.get())
     if inputBox4.get() != '':
-        alignmentStrength = int(inputBox4.get())
+        alignmentStrength = float(inputBox4.get())
     if inputBox5.get() != '':
-        speedLimit = int(inputBox5.get())
+        speedLimit = float(inputBox5.get())
 
     # Removes input information
     inputLabel1.grid_forget()
