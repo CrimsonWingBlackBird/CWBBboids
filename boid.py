@@ -59,12 +59,12 @@ class Boid():
 
     # Steers the boids away from the edges
     # NEED TO UPDATE USING sizeX AND sizeY
-    def edges(self):
-        if (self.position.x >= 900):
+    def edges(self, width, height):
+        if (self.position.x >= width-100):
             self.acceleration.x -= 1
         if (self.position.x <= 100):
             self.acceleration.x += 1
-        if (self.position.y >= 900):
+        if (self.position.y >= height-100):
             self.acceleration.y -= 1
         if (self.position.y <= 100):
             self.acceleration.y += 1
