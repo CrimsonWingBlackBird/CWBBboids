@@ -1,18 +1,18 @@
 from tkinter import *
 import math
 import numpy as np
-from vector2D import Vector2D
+from vector3D import Vector3D
 
 
 class Boid():
 
     # Initializes the boid
-    def __init__(self, x, y, width, height):
-        self.position = Vector2D(x, y)
-        vec = (np.random.rand(2) - 0.5)*10
-        self.velocity = Vector2D(*vec)
-        vec = (np.random.rand(2) - 0.5)/2
-        self.acceleration = Vector2D(*vec)
+    def __init__(self, x, y, z, width, height, depth):
+        self.position = Vector3D(x, y, z)
+        vec = (np.random.rand(3) - 0.5)*10
+        self.velocity = Vector3D(*vec)
+        vec = (np.random.rand(3) - 0.5)/2
+        self.acceleration = Vector3D(*vec)
 
     # Draws the boid on the canvas
     def show(self, canvas):
@@ -31,7 +31,7 @@ class Boid():
     # Makes the boids stick together.
     def cohesion(self, boids, cohesionStrength):
         neighborList = self.neighborBoids(boids, 50)
-        averageNeighborList = Vector2D(0, 0)
+        averageNeighborList = Vector3D(0, 0, 0)
         for boid in neighborList:
             averageNeighborList += boid.position
         averageNeighborList = averageNeighborList/len(neighborList)
@@ -40,7 +40,7 @@ class Boid():
     # Makes the boids not get too close
     def seperation(self, boids, seperationStrength):
         neighborList = self.neighborBoids(boids, 20)
-        averageNeighborList = Vector2D(0, 0)
+        averageNeighborList = Vector3D(0, 0, 0)
         for boid in neighborList:
             averageNeighborList += boid.position
         averageNeighborList = averageNeighborList/len(neighborList)
@@ -50,7 +50,7 @@ class Boid():
     # Makes the boids go in the same direction as their neighbors
     def alignment(self, boids, alignmentStrength):
         neighborList = self.neighborBoids(boids, 50)
-        averageNeighborList = Vector2D(0, 0)
+        averageNeighborList = Vector3D(0, 0, 0)
         for boid in neighborList:
             averageNeighborList += boid.velocity
         averageNeighborList = averageNeighborList/len(neighborList)
@@ -58,8 +58,7 @@ class Boid():
             (averageNeighborList-self.velocity)
 
     # Steers the boids away from the edges
-    # NEED TO UPDATE USING sizeX AND sizeY
-    def edges(self, width, height):
+    def edges(self, width, height, depth):
         if (self.position.x >= width-100):
             self.acceleration.x -= 1
         if (self.position.x <= 100):
@@ -68,13 +67,17 @@ class Boid():
             self.acceleration.y -= 1
         if (self.position.y <= 100):
             self.acceleration.y += 1
+        if (self.position.z >= depth-100):
+            self.acceleration.z -= 1
+        if (self.position.z <= 100):
+            self.acceleration.z += 1
 
     # Pushes velocity and position changes to boids
     def update(self, speedLimit):
         self.applySpeedLimit(speedLimit)
         self.position += self.velocity
         self.velocity += self.acceleration
-        self.acceleration = Vector2D(0, 0)
+        self.acceleration = Vector3D(0, 0, 0)
 
     # Stops the boids from going too fast
     def applySpeedLimit(self, speedLimit):

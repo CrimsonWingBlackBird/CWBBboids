@@ -5,6 +5,7 @@ from boid import Boid
 # Sets the size of the simulation environment
 sizeX = 1000
 sizeY = 1000
+sizeZ = 1000
 
 # Simulation Parameters
 numberOfBoids = 50
@@ -80,7 +81,7 @@ def startSimulation():
     startButton.grid_forget()
 
     # Start simulation
-    flock = [Boid(rng.random()*sizeX, rng.random()*sizeY, sizeX, sizeY)
+    flock = [Boid(rng.random()*sizeX, rng.random()*sizeY, rng.random()*sizeZ, sizeX, sizeY, sizeZ)
              for _ in range(numberOfBoids)]
     c = Canvas(root, width=sizeX, height=sizeY, bd=5, bg="white")
     c.grid(row=0, column=0)
@@ -151,18 +152,19 @@ def App(canvas):
     global stopFlag
     global sizeX
     global sizeY
+    global sizeZ
     for boid in flock:
         boid.show(canvas)
         boid.behavior(flock, cohesionStrength,
                       seperationStrength, alignmentStrength)
-        boid.edges(sizeX, sizeY)
+        boid.edges(sizeX, sizeY, sizeZ)
         boid.update(speedLimit)
     if (resetFlag or stopFlag) is not True:
         root.after(25, lambda: App(canvas))
     elif stopFlag is True:
         displayParameterInput()
     else:
-        flock = [Boid(rng.random()*sizeX, rng.random()*sizeY, sizeX, sizeY)
+        flock = [Boid(rng.random()*sizeX, rng.random()*sizeY, rng.random()*sizeZ, sizeX, sizeY, sizeZ)
                  for _ in range(numberOfBoids)]
         resetFlag = False
         root.after(1, lambda: App(canvas))
